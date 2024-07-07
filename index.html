@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sum Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Sum Calculator</h2>
+        <form id="sumForm">
+            <label for="numbersInput">Enter numbers (comma separated):</label>
+            <input type="text" id="numbersInput" name="numbers">
+            <button type="submit">Calculate Sum</button>
+        </form>
+        <div class="result" id="resultContainer"></div>
+    </div>
+
+    <script>
+        document.getElementById('sumForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            var numbersInput = document.getElementById('numbersInput').value.trim();
+            var numbers = numbersInput.split(',').map(Number);
+
+            fetch('http://localhost:5000/sum', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ numbers: numbers }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                var resultContainer = document.getElementById('resultContainer');
+                resultContainer.innerHTML = '<h3>Result:</h3><p>Sum: ' + data.sum + '</p>';
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
